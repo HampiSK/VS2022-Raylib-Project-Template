@@ -18,8 +18,8 @@ This simple project sets up a Visual Studio 2022 environment for game developmen
   * `Game\Test` directory includes example test implementations.
 - `Dependencies` directory for all game dependencies:
   * `Build-Dependencies.lua` - Defines the setup order of dependencies.
-  * `Build-Googletest.lua` - Includes the testing dependency used for tests.
-  * `Build-Raylib.lua` - Includes the game engine.
+  * `Build-Googletest.lua` - Includes the testing dependency used for tests (`v1.14.x`).
+  * `Build-Raylib.lua` - Includes the game engine (`v5.0`).
   * Additional dependencies can be added similarly.
 - A simple `.gitignore` to exclude project files and binaries.
 - Premake binaries for Windows and Linux (`v5.0-beta2`).
