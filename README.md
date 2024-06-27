@@ -6,7 +6,7 @@ This simple project sets up a Visual Studio 2022 environment for game developmen
 - [Visual Studio 2022](https://visualstudio.com) (Not strictly required, but the included setup scripts support only this version)
 
 ## Getting Started
-1. Navigate to the `scripts` directory and run the appropriate setup file for your operating system.
+1. Navigate to the `Setup` directory and run the appropriate setup file for your operating system.
    - Note: The Linux setup has not been tested.
 2. All dependencies will be automatically downloaded and configured.
 3. A VS2022 solution will be created in the root directory.
