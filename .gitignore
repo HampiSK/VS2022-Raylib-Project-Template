@@ -1,8 +1,12 @@
 # Directories
+.vscode/
 .vs/
 Binaries/
-Dependencies/Raylib
-Dependencies/Googletest
+
+# Dependencies
+Dependencies/*
+!Dependencies/*.*
+Dependencies/*/
 
 # Files
 *.vcxproj
