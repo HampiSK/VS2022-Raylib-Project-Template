@@ -1,12 +1,37 @@
-#include "GameWindow/GameWindow.hpp"
+#ifdef near
+#undef near
+#endif
 
-int main(int argc, char **argv)
+#ifdef far
+#undef far
+#endif
+
+#include <raylib.h>
+#include <raymath.h>
+#include <rlgl.h>
+
+int main()
 {
-    constexpr int SCREEN_WIDTH = 800;
-    constexpr int SCREEN_HEIGHT = 450;
+    InitWindow(1280, 720, GAME_NAME);
+    SetTargetFPS(60);
 
-    GameWindow game(SCREEN_WIDTH, SCREEN_HEIGHT);
-    game.Start();
+    Texture2D texture = LoadTexture("../Resource/tile.png");
 
+    while (!WindowShouldClose())
+    {
+        const Vector2 pos = GetMousePosition();
+
+        BeginDrawing();
+        ClearBackground(BLACK);
+
+        DrawTexture(texture, GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f, WHITE);
+        DrawCircleV(pos, 4, WHITE);
+
+        EndDrawing();
+    }
+
+    UnloadTexture(texture);
+
+    CloseWindow();
     return 0;
 }
