@@ -1,6 +1,6 @@
 # Raylib Project Template (VS2022)
 
-This simple project sets up a Visual Studio 2022 environment with all necessary dependencies, including automatic download and linkage.
+This simple C++/raylib project sets up a Visual Studio 2022 environment with all the necessary dependencies, including automatic downloading and linking.
 
 ## Requirements
 - [Visual Studio 2022](https://visualstudio.com) (Not strictly required, but the included setup scripts support this version)
