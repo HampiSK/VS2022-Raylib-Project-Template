@@ -1,55 +1,34 @@
-project "Game"
+-----------------------------
+-- Local
+-----------------------------
+
+local projectName = Global.name
+local projectPath = Global.gameDir .. "/Source"
+
+-----------------------------
+-- Define Project
+-----------------------------
+
+project (projectName)
    kind "ConsoleApp"
    language "C++"
-   cppdialect "C++latest"
-   staticruntime "off"
+   cppdialect "C++20"
+   staticruntime "on"
 
-   targetdir (outputdir)
-   objdir (intermediatesdir)
+   defines { 'GAME_NAME="' .. Global.name .. '"'}
 
-   files {
-      "%{prj.location}/**.h",
-      "%{prj.location}/**.c",
-      "%{prj.location}/**.hpp",
-      "%{prj.location}/**.cpp",
-   }
+   targetdir (Global.outProjectDir)
+   objdir (Global.objProjectDir)
+   targetname (projectName)
+   warnings "Extra"
 
-   includedirs {
-      "%{prj.location}/**",
-   }
-
-   filter "system:windows"
-      buildoptions { "/EHsc", "/Zc:preprocessor", "/Zc:__cplusplus" }
-      systemversion "latest"
-
-   Link.Raylib()
-
-   dependson { "Raylib" }
-
--- Link Export
--- Function to link Game project for other projects
-function Link.Game()
-   links { "Game" }
-   libdirs { librariesdir .. "/Game" }
+   includedirs { projectPath }
 
    files {
-      rootdir .. "/Game/Source/**.h",
-      rootdir .. "/Game/Source/**.c",
-      rootdir .. "/Game/Source/**.hpp",
-      rootdir .. "/Game/Source/**.cpp",
+      projectPath .. "/**.h",
+      projectPath .. "/**.c",
+      projectPath .. "/**.hpp",
+      projectPath .. "/**.cpp",
    }
-
-   removefiles { rootdir .. "/Game/Source/main.cpp" }
-
-   includedirs {
-      rootdir .. "/Game/Source",
-   }
-
-   filter "system:windows"
-      buildoptions { "/EHsc", "/Zc:preprocessor", "/Zc:__cplusplus" }
-      systemversion "latest"
 
    Link.Raylib()
-
-   dependson { "Raylib" }
-end

@@ -1,51 +1,74 @@
--- Globals
+-----------------------------
+-- Import
+-----------------------------
 
--- Define a project name
-gamename = "AllOnRed"
+include (path.translate("./Premake/Utils/Utils.lua")) -- Helpers
 
--- Get path to a root directory
-rootdir = os.getcwd()
+-----------------------------
+-- Global
+-----------------------------
 
--- Create directories if they don't exist
-os.mkdir(rootdir .. "/Binaries")
-os.mkdir(rootdir .. "/Binaries/Intermediates")
-os.mkdir(rootdir .. "/Dependencies")
+Global = {}  -- Global data container
+Link = {}    -- Used for linking other projects
 
--- Define paths
-outputdir = rootdir .. "/Binaries/%{cfg.system}-%{cfg.architecture}/%{cfg.buildcfg}/%{prj.name}"
-librariesdir = rootdir .. "/Binaries/%{cfg.system}-%{cfg.architecture}/%{cfg.buildcfg}"
-intermediatesdir = rootdir .. "/Binaries/Intermediates/%{cfg.system}-%{cfg.architecture}/%{cfg.buildcfg}/%{prj.name}"
-dependenciesdir = rootdir .. "/Dependencies"
+-- Project name
+Global.name = "Game Name"
 
--- Define helpers
-Utils = {}
-include (rootdir .. "/Premake/Utils/Utils.lua")
+-- Static directory paths
+Global.rootDir = Utils.normalizePath(os.getcwd())
+Global.gameDir = Utils.normalizePath(Global.rootDir .. "/Game")
+Global.binDir = Utils.normalizePath(Global.rootDir .. "/Binaries")
+Global.objDir = Utils.normalizePath(Global.rootDir .. "/Binaries/Intermediates")
+Global.depDir = Utils.normalizePath(Global.rootDir .. "/Dependencies")
 
-Link = {}
+-- Paths with tokens to be expanded after project generation
+Global.outProjectDir = Utils.normalizePath(path.join(Global.binDir, "%{cfg.system}-%{cfg.architecture}/%{cfg.buildcfg}/%{prj.name}"))
+Global.libProjectDir = Utils.normalizePath(path.join(Global.binDir, "%{cfg.system}-%{cfg.architecture}/%{cfg.buildcfg}"))
+Global.objProjectDir = Utils.normalizePath(path.join(Global.objDir, "%{cfg.system}-%{cfg.architecture}/%{cfg.buildcfg}/%{prj.name}"))
 
--- Define workspace
-workspace(gamename)
+-----------------------------
+-- Build
+-----------------------------
+
+print("Checking prerequisites...")
+Utils.checkGit()
+Utils.checkVisualStudio()
+
+print("Cleaning previous setup...")
+Utils.removeDirectory(Global.binDir)
+Utils.removeFiles(Global.rootDir, {"*.sln", "*.vcxproj", "*.vcxproj.user", "*.vcxproj.filters"})
+Utils.removeFiles(Global.gameDir .. "/**", {"*.sln", "*.vcxproj", "*.vcxproj.user", "*.vcxproj.filters"})
+Utils.removeFiles(Global.depDir .. "/*/*", {"*.sln", "*.vcxproj", "*.vcxproj.user", "*.vcxproj.filters"})
+
+print("Building environment for " .. Global.name .. "...")
+os.mkdir(Global.binDir)
+os.mkdir(Global.objDir)
+
+-----------------------------
+-- Define Workspace
+-----------------------------
+
+workspace(Global.name)
+   startproject(Global.name)
    architecture "x64"
-   configurations { "Dev", "Release" }
-   startproject "Game"
-
-   -- Build configurations
+   configurations { "Dev" }
 
    filter "configurations:Dev"
-      defines { "DEVELOPMENT_MODE" }
-      symbols "On"
-      optimize "Off"
       runtime "Debug"
+      optimize "Off"
+      symbols "On"
 
-   filter "configurations:Release"
-      defines { "RELEASE_MODE" }
-      optimize "Full"
+   filter "action:vs*"
+      buildoptions { "/MP" }
 
-   -- Define projects
+   filter "system:windows"
+      buildoptions { "/EHsc", "/Zc:preprocessor", "/Zc:__cplusplus" }
+      systemversion "latest"
+
+   filter {}
 
    group "Dependencies"
-      include (rootdir .. "/Dependencies/Build-Dependencies.lua")
+      include (Global.depDir .. "/Build-Raylib.lua")
    group ""
 
-   include (rootdir .. "/Game/Source/Build-Game.lua")
-   include (rootdir .. "/Game/Test/Build-Test.lua")
+   include (Global.gameDir .. "/Source/Build-Game.lua")
