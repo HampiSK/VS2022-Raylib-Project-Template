@@ -1,9 +1,9 @@
 #ifdef near
-#undef near
+    #undef near
 #endif
 
 #ifdef far
-#undef far
+    #undef far
 #endif
 
 #include <raylib.h>
